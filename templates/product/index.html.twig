@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="container d-flex flex-wrap justify-content-center">
+    
+    {% for product in tabProduct %}
+    <div class="card col-5 m-3">
+  <img src="{{asset('img/' ~ product.image)}}" class="card-img-top" alt="{{product.image}}">
+  <div class="card-body">
+    <h5 class="card-title">{{product.title}}</h5>
+    <p>description :</p>
+    <p class="card-text">{{product.description}}</p>
+    <p class="card-text">Date de parution : {{product.date_parution}}</p>
+  </div>
+</div>
+<br>
+    {% endfor %}
+</div>
+{% endblock %}

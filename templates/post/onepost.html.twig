@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}One post{% endblock %}
+
+{% block body %}
+<table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Identifiant</th>
+                <th>Titre</th>
+                <th>Description</th>
+                <th>Créé le</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for post in post %}
+            <tr>
+                <td>{{post.id}}</td>
+                <td>{{post.slug}}</td>
+                <td>{{post.title}}</td>
+                <td>{{post.excerpt}}</td>
+                <td>{{post.createdAt}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+    {% endblock %}

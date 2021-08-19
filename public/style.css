@@ -1,0 +1,11 @@
+.nav {
+    height: 8vh;
+
+}
+.nav-link {
+    font-size: 2em !important;
+}
+
+.card img {
+    height: 70vh;
+}
