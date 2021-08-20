@@ -54,4 +54,36 @@ class AutoController extends AbstractController
         $em->flush();
         return $this->redirectToRoute("auto");
     }
+    #[Route('/edit/{id}', name: 'auto_edit')]
+    public function update($id){
+
+        $em = $this->getDoctrine()->getManager();
+
+        $auto = $em->getRepository(Auto::class)->find($id);
+        
+        if(!$auto){
+            throw $this->createNotFoundException(
+                'aucune voiture ne correspond à l\'id :'.$id
+            );
+        }
+        $auto->setMarque('Peugeot');
+        $em->flush();
+        return $this->redirectToRoute("auto_item",['id'=>$auto->getId()]);
+    }
+    #[Route('/delete/{id}', name: 'auto_delete')]
+    public function delete($id){
+
+        $em = $this->getDoctrine()->getManager();
+
+        $auto = $em->getRepository(Auto::class)->find($id);
+        
+        if(!$auto){
+            throw $this->createNotFoundException(
+                'aucune voiture ne correspond à l\'id :'.$id
+            );
+        }
+        $em->remove($auto);
+        $em->flush();
+        return $this->redirectToRoute("auto");
+    }
 }

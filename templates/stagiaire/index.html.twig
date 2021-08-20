@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello stagiaireController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em stagiaire; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="container">
+    <h1>Liste des stagiaires</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>nom</th>
+                <th>prenom</th>
+                <th>telephone</th>
+                <th>adresse</th>
+                <th>diplome</th>
+                <th>date de naissance</th>
+                <th>contrat</th>
+                <th>photo</th>
+                <th>description</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for stagiaire in stagiaires %}
+            <tr>
+                <td>{{stagiaire.id}}</td>
+                <td>{{stagiaire.nom}}</td>
+                <td>{{stagiaire.prenom}}</td>
+                <td>{{stagiaire.telephone}}</td>
+                <td>{{stagiaire.adresse}}</td>
+                <td>{{stagiaire.diplome}}</td>
+                <td></td>
+                <td>{{stagiaire.contrat}}</td>
+                <td><img src="{{ asset('' ~ stagiaire.photo)}}"></td>
+                <td>{{stagiaire.description}}</td>
+                
+                <td>
+                    {# <a href="{{path('stagiaire_item',{id:stagiaire.id})}}" class="btn btn-primary"><i class="fas fa-pen"></i>Détail</a>
+                    <a href="{{path('stagiaire_edit',{id:stagiaire.id})}}" class="btn btn-info"><i class="fas fa-pen"></i>Editer</a>
+                    <a onclick="return confirm('Êtes-vous sûr de vouloir supprimer ?')" href="{{path('stagiaire_delete',{id:stagiaire.id})}}" class="btn btn-danger"><i class="fas fa-pen"></i>Supprimer</a> #}
+                    {# <a href="stagiaire/{{stagiaire.id}}" class="btn btn-info"><i class="fas fa-pen"></i>Détail</a> #}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+</div>
+{% endblock %}

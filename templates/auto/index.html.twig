@@ -31,8 +31,9 @@
                 <td>{{auto.prix | format_currency('EUR')}}</td>
                 <td><img src="{{ asset('' ~ auto.image)}}"></td>
                 <td>
-                    <a href="{{path('auto_item',{id:auto.id})}}" class="btn btn-info"><i class="fas fa-pen"></i>Détail</a>
-                    
+                    <a href="{{path('auto_item',{id:auto.id})}}" class="btn btn-primary"><i class="fas fa-pen"></i>Détail</a>
+                    <a href="{{path('auto_edit',{id:auto.id})}}" class="btn btn-info"><i class="fas fa-pen"></i>Editer</a>
+                    <a onclick="return confirm('Êtes-vous sûr de vouloir supprimer ?')" href="{{path('auto_delete',{id:auto.id})}}" class="btn btn-danger"><i class="fas fa-pen"></i>Supprimer</a>
                     {# <a href="auto/{{auto.id}}" class="btn btn-info"><i class="fas fa-pen"></i>Détail</a> #}
                 </td>
             </tr>
