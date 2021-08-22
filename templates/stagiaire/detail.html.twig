@@ -23,12 +23,10 @@
                 <th>contrat</th>
                 <th>photo</th>
                 <th>description</th>
-                <th>options</th>
-
             </tr>
         </thead>
         <tbody>
-        {% for stagiaire in stagiaires %}
+        
             <tr>
                 <td>{{stagiaire.id}}</td>
                 <td>{{stagiaire.nom}}</td>
@@ -36,23 +34,14 @@
                 <td>{{stagiaire.telephone}}</td>
                 <td>{{stagiaire.adresse}}</td>
                 <td>{{stagiaire.diplome}}</td>
-                {% if stagiaire.dateNaiss is empty %}
-                <td>Non défini</td>
-                {% else %}
                 <td>{{stagiaire.dateNaiss|date('d-m-Y')}}</td>
-                {% endif %}
                 <td>{{stagiaire.contrat}}</td>
                 <td><img src="{{ asset('' ~ stagiaire.photo)}}"></td>
                 <td>{{stagiaire.description}}</td>
                 
-                <td>
-                    <a href="{{path('stagiaire_item',{id:stagiaire.id})}}" class="btn btn-primary"><i class="fas fa-pen"></i>Détail</a>
-                    <a href="{{path('stagiaire_edit',{id:stagiaire.id})}}" class="btn btn-info"><i class="fas fa-pen"></i>Editer</a>
-                    <a onclick="return confirm('Êtes-vous sûr de vouloir supprimer ?')" href="{{path('stagiaire_delete',{id:stagiaire.id})}}" class="btn btn-danger"><i class="fas fa-pen"></i>Supprimer</a>
-                    {# <a href="stagiaire/{{stagiaire.id}}" class="btn btn-info"><i class="fas fa-pen"></i>Détail</a> #}
-                </td>
+               
             </tr>
-            {% endfor %}
+            
         </tbody>
 
     </table>

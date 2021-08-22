@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use DateTime;
 use App\Entity\Stagiaire;
+use App\Repository\StagiaireRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,7 +16,7 @@ class StagiaireController extends AbstractController
     {
         $repo = $this->getDoctrine()->getRepository(Stagiaire::class);
         $stagiaires = $repo->findAll();
-         //dd($stagiaires);
+        
         return $this->render('stagiaire/index.html.twig', [
             'stagiaires' => $stagiaires,
         ]);
@@ -39,5 +40,45 @@ class StagiaireController extends AbstractController
         $em->persist($sta);
         $em->flush();
         return $this->redirectToRoute("stagiaire");
+    }
+
+    #[Route('/stagiaire/detail/{id}', name: 'stagiaire_item')]
+    public function findOne($id, StagiaireRepository $repo): Response
+    {
+        $repo = $this->getDoctrine()->getRepository(Stagiaire::class);
+        $stagiaire = $repo->find($id);
+        // dd($stagiaire);
+        return $this->render('stagiaire/detail.html.twig', [
+            'stagiaire' => $stagiaire,
+        ]);
+    }
+    
+    #[Route('/stagiaire/edit/{id}', name: 'stagiaire_edit')]
+    public function edit($id): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $stagiaire = $em->getRepository(Stagiaire::class)->find($id);
+        if(!$stagiaire){
+            throw $this->createNotFoundException(
+                'aucun stagiaire ne correspond à l\'id :'.$id
+            );
+        }
+        $stagiaire->setNom('Jean Bernard');
+        $em->flush();
+        return $this->redirectToRoute('stagiaire');
+    }
+    #[Route('/stagiaire/delete/{id}', name: 'stagiaire_delete')]
+    public function delete($id): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $stagiaire = $em->getRepository(Stagiaire::class)->find($id);
+        if(!$stagiaire){
+            throw $this->createNotFoundException(
+                'aucun stagiaire ne correspond à l\'id :'.$id
+            );
+        }
+        $em->remove($stagiaire);
+        $em->flush();
+        return $this->redirectToRoute('stagiaire');
     }
 }
