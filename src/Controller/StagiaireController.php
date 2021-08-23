@@ -4,7 +4,10 @@ namespace App\Controller;
 
 use DateTime;
 use App\Entity\Stagiaire;
+use App\Form\StagiaireType;
 use App\Repository\StagiaireRepository;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,13 +15,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class StagiaireController extends AbstractController
 {
     #[Route('/stagiaire', name: 'stagiaire')]
-    public function index(): Response
+    public function index(PaginatorInterface $paginator,Request $request): Response
     {
         $repo = $this->getDoctrine()->getRepository(Stagiaire::class);
         $stagiaires = $repo->findAll();
-        
+        $stgPagination = $paginator->paginate(
+            $stagiaires,
+            $request->query->getInt('page',1)
+            );
         return $this->render('stagiaire/index.html.twig', [
-            'stagiaires' => $stagiaires,
+            'stagiaires' => $stgPagination,
         ]);
     }
     #[Route('stagiaire/new', name: 'stagiaire_new')]
@@ -40,6 +46,22 @@ class StagiaireController extends AbstractController
         $em->persist($sta);
         $em->flush();
         return $this->redirectToRoute("stagiaire");
+    }
+    #[Route('stagiaire/add', name: 'stagiaire_add')]
+    public function add(Request $request){
+
+        $em = $this->getDoctrine()->getManager();
+        $stg = new Stagiaire();
+        $form_edit=$this->createForm(StagiaireType::class,$stg);
+        $form_edit->handleRequest($request);
+        
+        if($form_edit->isSubmitted() && $form_edit->isValid()) {
+            // dd($form_edit);
+            $em->persist($stg);
+            $em->flush();
+            return $this->redirectToRoute("stagiaire");
+        }
+        return $this->render("stagiaire/add.html.twig",['form_edit'=>$form_edit->createView()]);
     }
 
     #[Route('/stagiaire/detail/{id}', name: 'stagiaire_item')]
@@ -67,6 +89,27 @@ class StagiaireController extends AbstractController
         $em->flush();
         return $this->redirectToRoute('stagiaire');
     }
+
+    #[Route('/stagiaire/update/{id}', name: 'stagiaire_update')]
+    public function update($id, Request $request): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $stagiaire = $em->getRepository(Stagiaire::class)->find($id);
+        $form_edit = $this->createForm(StagiaireType::class,$stagiaire);
+        if(!$stagiaire){
+            throw $this->createNotFoundException(
+                'aucun stagiaire ne correspond à l\'id :'.$id
+            );
+        }
+        $form_edit->handleRequest($request);
+        if($form_edit->isSubmitted() && $form_edit->isValid()){
+            $em->flush();
+            return $this->redirectToRoute('stagiaire_item',['id'=>$id]);
+        }
+        
+        return $this->render('stagiaire/edit.html.twig',['form_edit'=>$form_edit->createView()]);
+    }
+
     #[Route('/stagiaire/delete/{id}', name: 'stagiaire_delete')]
     public function delete($id): Response
     {

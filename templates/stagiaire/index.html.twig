@@ -41,13 +41,17 @@
                 {% else %}
                 <td>{{stagiaire.dateNaiss|date('d-m-Y')}}</td>
                 {% endif %}
-                <td>{{stagiaire.contrat}}</td>
+                {% if stagiaire.contrat == true %}
+                <td>oui</td>
+                {% else %}
+                <td>non</td>
+                {% endif %}
                 <td><img src="{{ asset('' ~ stagiaire.photo)}}"></td>
                 <td>{{stagiaire.description}}</td>
                 
                 <td>
                     <a href="{{path('stagiaire_item',{id:stagiaire.id})}}" class="btn btn-primary"><i class="fas fa-pen"></i>Détail</a>
-                    <a href="{{path('stagiaire_edit',{id:stagiaire.id})}}" class="btn btn-info"><i class="fas fa-pen"></i>Editer</a>
+                    <a href="{{path('stagiaire_update',{id:stagiaire.id})}}" class="btn btn-info"><i class="fas fa-pen"></i>Editer</a>
                     <a onclick="return confirm('Êtes-vous sûr de vouloir supprimer ?')" href="{{path('stagiaire_delete',{id:stagiaire.id})}}" class="btn btn-danger"><i class="fas fa-pen"></i>Supprimer</a>
                     {# <a href="stagiaire/{{stagiaire.id}}" class="btn btn-info"><i class="fas fa-pen"></i>Détail</a> #}
                 </td>
@@ -56,5 +60,6 @@
         </tbody>
 
     </table>
+    <div class="d-flex justify-content-center">{{ knp_pagination_render(stagiaires) }}</div>
 </div>
 {% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class="col-4 offset-4">
+<div class="row">
+   <div class="col-6">
+   {{form_start(form_edit)}}
+
+    {{form_label(form_edit.marque)}} 
+    {{form_widget(form_edit.marque)}} 
+    {{form_errors(form_edit.marque)}} 
+
+    </div>
+    <div class="col-6">
+    {{form_label(form_edit.modele)}} 
+    {{form_widget(form_edit.modele)}} 
+    {{form_errors(form_edit.modele)}} 
+
+    </div>
+    {{form_row(form_edit.puissance,{'label' : 'Puissance de votre véhicule'})}}
+   {{form_rest(form_edit)}}
+   <button class="btn btn-warning col-12">editer</button>
+   {{form_end(form_edit)}}
+   </div>
+   </div>
+{% endblock %}
