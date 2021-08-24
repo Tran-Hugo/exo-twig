@@ -14,6 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class AutoController extends AbstractController
@@ -83,7 +85,7 @@ class AutoController extends AbstractController
                           ])
                           ->add('prix',MoneyType::class)
                           ->add('puissance')
-                          ->add('image')
+                          ->add('image',FileType::class)
                           ->add('pays')
                           ->add('Soumettre',SubmitType::class)
                           
@@ -91,10 +93,21 @@ class AutoController extends AbstractController
         $form_auto->handleRequest($request);
         if($form_auto->isSubmitted() && $form_auto->isValid()){
             // dd($auto);
+            $file = $form_auto->get('image')->getData();
+            // dd($file);
+            $fileName = time().'.'.$file->guessExtension();
+
+            $file->move(
+                $this->getParameter('images_directory'),
+                $fileName
+            );
+            $auto->setImage($fileName);
             $em->persist($auto);
             $em->flush();
             return $this->redirectToRoute('auto');
         }
+        
+
         return $this->render("auto/add2.html.twig",[
             'form_car' => $form_auto->createView()
         ]);
@@ -115,19 +128,42 @@ class AutoController extends AbstractController
         }
         $form_edit->handleRequest($request);
         if($form_edit->isSubmitted() && $form_edit->isValid()) {
+            $fileSystem = new Filesystem();
+            $file = $form_edit->get('image')->getData();
+           
+            $fileName = time().'.'.$file->guessExtension();
+
+            $file->move(
+                $this->getParameter('images_directory'),
+                $fileName
+            );
+            if($file){
+                if($auto->getImage()){
+            
+                    $fileSystem->remove('imgs/'.$auto->getImage());
+                    
+                    $auto->setImage($fileName);
+                }
+                
+
+            }
+            
             $em->flush();
             return $this->redirectToRoute("auto_item",['id'=>$auto->getId()]);
         }
-        // $auto->setMarque('Peugeot');
-        // $em->flush();
-        // return $this->redirectToRoute("auto_item",['id'=>$auto->getId()]);
-        return $this->render("auto/edit.html.twig",['form_edit'=>$form_edit->createView()]);
+        
+        return $this->render("auto/edit.html.twig",[
+            'form_edit'=>$form_edit->createView(),
+            'auto'=>$auto
+        ]);
    
     }
     
     #[Route('/delete/{id}', name: 'auto_delete')]
     public function delete($id){
 
+        $fileSystem = new Filesystem();
+        
         $em = $this->getDoctrine()->getManager();
 
         $auto = $em->getRepository(Auto::class)->find($id);
@@ -136,6 +172,11 @@ class AutoController extends AbstractController
             throw $this->createNotFoundException(
                 'aucune voiture ne correspond à l\'id :'.$id
             );
+        }
+        if(file_exists('imgs/'.$auto->getImage())){
+            
+            $fileSystem->remove('imgs/'.$auto->getImage());
+
         }
         $em->remove($auto);
         $em->flush();

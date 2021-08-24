@@ -17,6 +17,9 @@
 
     </div>
     {{form_row(form_edit.puissance,{'label' : 'Puissance de votre véhicule'})}}
+   {{form_row(form_edit.prix)}}
+   {{form_row(form_edit.image)}}
+   <img src="{{ asset('imgs/' ~ auto.image) }}" class="img-thumbnail" width="100" alt=""/>
    {{form_rest(form_edit)}}
    <button class="btn btn-warning col-12">editer</button>
    {{form_end(form_edit)}}

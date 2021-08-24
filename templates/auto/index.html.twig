@@ -31,7 +31,7 @@
                 <td>{{auto.modele}}</td>
                 <td>{{auto.puissance}} ch</td>
                 <td>{{auto.prix | format_currency('EUR')}}</td>
-                <td><img src="{{ asset('' ~ auto.image)}}"></td>
+                <td><img src="{{ asset('imgs/' ~ auto.image)}}"></td>
                 <td>
                     <a href="{{path('auto_item',{id:auto.id})}}" class="btn btn-primary"><i class="fas fa-pen"></i>Détail</a>
                     <a href="{{path('auto_edit',{id:auto.id})}}" class="btn btn-info"><i class="fas fa-pen"></i>Editer</a>
