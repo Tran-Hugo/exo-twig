@@ -6,6 +6,7 @@ use App\Entity\Auto;
 use App\Form\AutoType;
 use App\Repository\AutoRepository;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -73,7 +74,7 @@ class AutoController extends AbstractController
         return $this->render('auto/add.html.twig');
     }
     #[Route('/add', name: 'add_auto')]
-    public function addForm(Request $request){
+    public function addForm(Request $request,EntityManagerInterface $em){
         $auto = new Auto();
         $form_auto = $this->createFormBuilder($auto)
                           ->add('marque', TextType::class)
@@ -89,9 +90,10 @@ class AutoController extends AbstractController
                           ->getForm();
         $form_auto->handleRequest($request);
         if($form_auto->isSubmitted() && $form_auto->isValid()){
-            dd($auto);
-            // $em->persist($auto);
-            // $em->flush()
+            // dd($auto);
+            $em->persist($auto);
+            $em->flush();
+            return $this->redirectToRoute('auto');
         }
         return $this->render("auto/add2.html.twig",[
             'form_car' => $form_auto->createView()
