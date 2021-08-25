@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+{% form_theme formContact 'bootstrap_5_layout.html.twig' %}
+{% block body %}
+    <h1>Formulaire d'ajout</h1>
+   <div class="container"> {{form(formContact)}} 
+   <button type='submit' class="btn btn-primary col-12">Envoyer</div>
+   </div>
+{% endblock %}

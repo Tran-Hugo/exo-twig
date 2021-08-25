@@ -8,6 +8,10 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
+{# {{ dump(app.session.get('cars')) }} #}
+{{ dump(cars) }}
+
+
 <div class="example-wrapper">
     <h1>Liste des articles</h1>
     <a href="{{path('add_auto')}}" class="btn btn-primary"></i>Ajouter une voiture</a>
