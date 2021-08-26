@@ -84,4 +84,19 @@ class AutoRepository extends ServiceEntityRepository
             $result->execute(['p'=>$price]);
             return $result->fetchAllAssociative();
     }
+
+    public function findSearchedCar($searched):array
+    {
+        $em = $this->getEntityManager();
+        $q = $em->createQuery(
+            "SELECT a 
+            FROM App\Entity\Auto a
+            WHERE a.marque = :s
+            OR a.modele = :s
+            OR a.pays = :s")
+            ->setParameter('s',$searched);
+            
+            return $q->getResult();
+        
+    }
 }

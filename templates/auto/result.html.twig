@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+
+<div class="example-wrapper">
+    <h1>Résultats de votre recherche</h1>
+    <div class='d-flex justify-content-end'>{% include 'auto/search.html.twig' %}</div>
+    
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Marque</th>
+                <th>Modèle</th>
+                <th>Puissance</th>
+                <th>Prix</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for auto in autos %}
+            <tr>
+                <td>{{auto.id}}</td>
+                <td>{{auto.marque}}</td>
+                <td>{{auto.modele}}</td>
+                <td>{{auto.puissance}} ch</td>
+                <td>{{auto.prix | format_currency('EUR')}}</td>
+                <td><img src="{{ asset('imgs/' ~ auto.image)}}"></td>
+                
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+    <div class="d-flex justify-content-center">{{ knp_pagination_render(autos) }}</div>
+{% endblock %}

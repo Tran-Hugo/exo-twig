@@ -33,7 +33,7 @@ class AutoController extends AbstractController
     #[Route('/auto', name: 'auto')]
     public function index(PaginatorInterface $paginator,Request $request): Response
     {
-        dd($request->get('search'));
+        // dd($request->get('search'));
         $repo = $this->getDoctrine()->getRepository(Auto::class);
         $autosData = $repo->findAll();
         $cars = $repo->findBy(['id'=>206]);
@@ -54,6 +54,21 @@ class AutoController extends AbstractController
         $carsExp = $repo->findAllGreaterThanPrice2(90000);
         dd($carsExp);
     }
+
+    #[Route('/result', name: 'search_result')]
+    public function search(AutoRepository $repo,Request $request,PaginatorInterface $paginator){
+        $slug=$request->get('search');
+        $carsSearched = $repo->findSearchedCar($slug);
+        // dd($carsSearched);
+        $autosPagination = $paginator->paginate(
+            $carsSearched,
+            $request->query->getInt('page',1)
+            );
+        return $this->render('auto/result.html.twig',[
+            'autos'=>$autosPagination
+        ]);
+    }
+
 
     #[Route('/auto/{id}', methods:'GET', name: 'auto_item')]
     // public function getAuto($id, AutoRepository $repo)
