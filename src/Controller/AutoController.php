@@ -163,8 +163,8 @@ class AutoController extends AbstractController
                 if(file_exists('imgs/'.$oldImage)){
                     $fileSystem->remove('imgs/'.$oldImage);
                     
-                    $auto->setImage($fileName);
                 }
+                $auto->setImage($fileName);
                 
 
             }
