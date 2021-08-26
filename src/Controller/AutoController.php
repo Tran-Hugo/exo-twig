@@ -279,6 +279,6 @@ class AutoController extends AbstractController
     
     #[Route('/confirm-email', name: 'confirm_email')]
     public function confirmation(){
-        return $this->render('emais/confirmation.html.twig');
+        return $this->render('emails/confirmation.html.twig');
     }
 }
