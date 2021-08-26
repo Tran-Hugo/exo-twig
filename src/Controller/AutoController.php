@@ -11,6 +11,7 @@ use Symfony\Component\Mime\Email;
 use App\Repository\AutoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
@@ -32,6 +33,7 @@ class AutoController extends AbstractController
     #[Route('/auto', name: 'auto')]
     public function index(PaginatorInterface $paginator,Request $request): Response
     {
+        dd($request->get('search'));
         $repo = $this->getDoctrine()->getRepository(Auto::class);
         $autosData = $repo->findAll();
         $cars = $repo->findBy(['id'=>206]);
@@ -46,6 +48,13 @@ class AutoController extends AbstractController
             'cars' => $cars
         ]);
     }
+
+    #[Route('/cars-exp', name: 'cars_exp')]
+    public function expensiveAutos(AutoRepository $repo){
+        $carsExp = $repo->findAllGreaterThanPrice2(90000);
+        dd($carsExp);
+    }
+
     #[Route('/auto/{id}', methods:'GET', name: 'auto_item')]
     // public function getAuto($id, AutoRepository $repo)
     // {   
@@ -229,11 +238,32 @@ class AutoController extends AbstractController
     }
 
     #[Route('/send-mail', name: 'form_contact')]
-    public function sendMail(){
+    public function sendMail(Request $request, MailerInterface $mailer){
         $form_contact = $this->createForm(ContactType::class);
+        $form_contact->handleRequest($request);
+        if($form_contact->isSubmitted() && $form_contact->isValid()){
+            $contact = $form_contact->getData();
+            // dd($contact);
+
+            $email = (new TemplatedEmail())
+                    ->from($contact['email'])
+                    ->to('hugo.tran77@gmail.com')
+                    ->subject($contact['subject'])
+                    ->htmlTemplate('emails/message.html.twig')
+                    ->context([
+                        'contact'=>$contact
+                    ]);
+                    $mailer->send($email);
+                    return $this->redirectToRoute('confirm_email');
+        }
         return $this->render('auto/contact.html.twig',[
             'formContact'=>$form_contact->createView()
         ]);
-    }
 
+    }
+    
+    #[Route('/confirm-email', name: 'confirm_email')]
+    public function confirmation(){
+        return $this->render('emais/confirmation.html.twig');
+    }
 }
