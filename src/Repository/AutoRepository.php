@@ -99,4 +99,15 @@ class AutoRepository extends ServiceEntityRepository
             return $q->getResult();
         
     }
+    public function findSearchedCar2($search):array
+    {
+        return $this->createQueryBuilder('a')
+                    ->where("a.marque LIKE :p")
+                    ->orWhere("a.modele LIKE :p")
+                    ->setParameter('p','%'.$search.'%')
+                    ->getQuery()
+                    ->getResult()
+        ;
+    }
+    
 }

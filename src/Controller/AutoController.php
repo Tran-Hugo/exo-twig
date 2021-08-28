@@ -31,17 +31,28 @@ class AutoController extends AbstractController
         $this->session=$session;
     }
     #[Route('/auto', name: 'auto')]
-    public function index(PaginatorInterface $paginator,Request $request): Response
+    public function index(PaginatorInterface $paginator,Request $request,AutoRepository $repository): Response
     {
-        // dd($request->get('search'));
-        $repo = $this->getDoctrine()->getRepository(Auto::class);
+        
+        $repo = $this->getDoctrine()->getRepository(Auto::class);//class Auto dans Entity
         $autosData = $repo->findAll();
-        $cars = $repo->findBy(['id'=>206]);
-        $this->session->set('cars',$cars);
-        $autosPagination = $paginator->paginate(
-            $autosData,
-            $request->query->getInt('page',1)
-            );
+        $cars = $repo->findBy(['id'=>206]);//on attribut à la variable 'cars' l'objet avec l'id 206
+        $this->session->set('cars',$cars); //on stock dans session 'cars' => $cars
+        $search = $request->get('search'); //on récupère la recherche
+        if($search){
+            $carsSearched = $repository->findSearchedCar2($search);//$repository pour récupèrer les methods
+            $autosPagination = $paginator->paginate(
+                $carsSearched,
+                $request->query->getInt('page',1)
+                );
+        } else {
+            $autosPagination = $paginator->paginate(
+                $autosData,
+                $request->query->getInt('page',1)
+                );
+        }
+        
+        
         // dd($autos);
         return $this->render('auto/index.html.twig', [
             'autos' => $autosPagination,
@@ -55,19 +66,19 @@ class AutoController extends AbstractController
         dd($carsExp);
     }
 
-    #[Route('/result', name: 'search_result')]
-    public function search(AutoRepository $repo,Request $request,PaginatorInterface $paginator){
-        $slug=$request->get('search');
-        $carsSearched = $repo->findSearchedCar($slug);
-        // dd($carsSearched);
-        $autosPagination = $paginator->paginate(
-            $carsSearched,
-            $request->query->getInt('page',1)
-            );
-        return $this->render('auto/result.html.twig',[
-            'autos'=>$autosPagination
-        ]);
-    }
+    // #[Route('/result', name: 'search_result')]
+    // public function search(AutoRepository $repo,Request $request,PaginatorInterface $paginator){
+    //     $slug=$request->get('search');
+    //     $carsSearched = $repo->findSearchedCar2($slug);
+    //     // dd($carsSearched);
+    //     $autosPagination = $paginator->paginate(
+    //         $carsSearched,
+    //         $request->query->getInt('page',1)
+    //         );
+    //     return $this->render('auto/result.html.twig',[
+    //         'autos'=>$autosPagination
+    //     ]);
+    // }
 
 
     #[Route('/auto/{id}', methods:'GET', name: 'auto_item')]
