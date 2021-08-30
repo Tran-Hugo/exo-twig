@@ -47,6 +47,11 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route('/login', name: 'login')]
+    public function login(){
+        return $this->render('user/login.html.twig');
+    }
+
     #[Route('/{id}', name: 'user_show', methods: ['GET'])]
     public function show(User $user): Response
     {
@@ -85,8 +90,5 @@ class UserController extends AbstractController
         return $this->redirectToRoute('user_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/login', name: 'login')]
-    public function login(){
-        return $this->render('user/login.html.twig');
-    }
+    
 }
