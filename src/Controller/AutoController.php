@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Auto;
 use App\Form\AutoType;
+use App\Entity\Category;
 use App\Form\ContactType;
 use App\Service\AutoService;
 use Doctrine\ORM\EntityManager;
@@ -20,6 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,6 +41,7 @@ class AutoController extends AbstractController
         $cars = $repo->findBy(['id'=>206]);//on attribut à la variable 'cars' l'objet avec l'id 206
         $this->session->set('cars',$cars); //on stock dans session 'cars' => $cars
         $search = $request->get('search'); //on récupère la recherche
+        // dd($autosData);
         if($search){
             $carsSearched = $repository->findSearchedCar2($search);//$repository pour récupèrer les methods
             $autosPagination = $paginator->paginate(
@@ -124,6 +127,9 @@ class AutoController extends AbstractController
     }
     #[Route('/add', name: 'add_auto')]
     public function addForm(Request $request,EntityManagerInterface $em,AutoService $autoService){
+        $categories = $em->getRepository(Category::class);
+        $allCategories=$categories->findAll();
+        // dd($categories);
         $auto = new Auto();
         $form_auto = $this->createFormBuilder($auto)
                           ->add('marque', TextType::class)
@@ -132,8 +138,13 @@ class AutoController extends AbstractController
                           ])
                           ->add('prix',MoneyType::class)
                           ->add('puissance')
-                          ->add('image',FileType::class)
+                          ->add('image',FileType::class,['required'   => false])
                           ->add('pays')
+                          ->add('category',ChoiceType::class,['choices'=> $allCategories,
+                          'choice_label' => function(?Category $category) {
+                            return $category ? $category->getName() : '';
+                        },]
+                          )
                           ->add('Soumettre',SubmitType::class)
                           
                           ->getForm();
@@ -186,10 +197,10 @@ class AutoController extends AbstractController
             $file = $form_edit->get('image')->getData();
            
             
-            
-            if($file){
+            if($file != null){
                 $fileName = time().'.'.$file->guessExtension();
 
+            //dd($file);
 
             $file->move(
                 $this->getParameter('images_directory'),
@@ -202,6 +213,8 @@ class AutoController extends AbstractController
                 $auto->setImage($fileName);
                 
 
+            } else {
+                $auto->setImage($oldImage);
             }
             
             $em->flush();

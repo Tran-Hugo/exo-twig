@@ -47,4 +47,36 @@ class CategoryRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getAutoByCategory($categoryId){
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT a, c
+            FROM app\Entity\Auto a
+            INNER JOIN a.category c
+            WHERE c.id = :id_cat'
+        )->setParameter('id_cat',$categoryId);
+
+        return $query->execute();
+    }
+    public function getAutosByCategory($categoryId, $search=null){
+        $em = $this->getEntityManager();
+        if($search){
+            $query = $em->createQuery(
+                'SELECT a, c
+                FROM App\Entity\Auto a
+                INNER JOIN a.category c 
+                WHERE (c.id =:id_cat AND (a.marque LIKE :search OR a.modele LIKE :search))'
+            )->setParameters(['id_cat'=> $categoryId, 'search'=>'%'.$search.'%']);
+        }else{
+            $query = $em->createQuery(
+                'SELECT a, c
+                FROM App\Entity\Auto a
+                INNER JOIN a.category c 
+                WHERE c.id =:id_cat'
+            )->setParameters(['id_cat'=> $categoryId]);
+
+        }
+        return $query->execute();
+    }
 }

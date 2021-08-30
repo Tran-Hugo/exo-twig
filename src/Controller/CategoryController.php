@@ -5,10 +5,11 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/category')]
 class CategoryController extends AbstractController
@@ -79,4 +80,23 @@ class CategoryController extends AbstractController
 
         return $this->redirectToRoute('category_index', [], Response::HTTP_SEE_OTHER);
     }
+    #[Route('/{id}/item', name: 'category_item')]
+    public function categoryItem(CategoryRepository $repo, $id, Request $request, PaginatorInterface $paginator){
+        
+        $search = $request->get('search');
+
+            //dd($search);
+        $autosData = $repo->getAutosByCategory($id, $search);
+       
+        $autosPagination = $paginator->paginate(
+            $autosData,
+            $request->query->getInt('page',1)//le numero de la page par défaut
+        );
+        //dd($autos);
+        return $this->render('category/autos.html.twig', [
+            'autos' => $autosPagination
+        ]);
+    }
+    
+
 }

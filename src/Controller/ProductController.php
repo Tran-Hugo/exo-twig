@@ -2,15 +2,20 @@
 
 namespace App\Controller;
 
+use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ProductController extends AbstractController
 {
     #[Route('/', name: 'product')]
-    public function index(): Response
+    public function index(CategoryRepository $repo, SessionInterface $session): Response
     {   
+        $categories = $repo->findAll();
+        $session->set('category',$categories);
+        // dd($session->get('category'));
         $products = [
             ["id" => 1, "title"=>"Article1", "image"=>"image1.jpg", "description"=>"Description1", "date_parution"=>"12/12/2015" ],
             ["id" => 2, "title"=>"Article2", "image"=>"image2.jpg", "description"=>"Description2", "date_parution"=>"12/12/2020" ],
