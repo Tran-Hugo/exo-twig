@@ -48,6 +48,11 @@ class User implements UserInterface
      */
     private $confirmPassword;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $roles;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -121,12 +126,19 @@ class User implements UserInterface
 
     public function getRoles()
     {
-        return ['ROLE_USER'];
+        return [$this->roles];
     }
 
     public function getUserIdentifier()
     {
-        
+        return $this->username;
+    }
+
+    public function setRoles(?string $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 
     

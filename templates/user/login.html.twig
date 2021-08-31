@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
+
 {% block body %}
-    <form method="post" action="{{path('login')}}">
+    <!-- <form method="post" action="{{path('login')}}">
         <div>
             <label>Login</label>
             <input type="text" name="_username" class="form-control" placeholder="Entrez votre login">
@@ -9,6 +10,22 @@
             <label>Password</label>
             <input type="password" name="_password" class="form-control" placeholder="Entrez votre mot de passe">
         </div>
-        <button type="submit" class"btn btn-primary col-12">Connectez-vous</button>
-    </form>
+        <button type="submit" class="btn btn-primary col-12">Connectez-vous</button>
+    </form> -->
+    {% if error %}
+    <div class="alert-danger text-center">
+      <strong>{{ error.messageKey|trans(error.messageData, 'security') }}</strong>
+    </div>
+    {% endif %}
+    <form class="col-6 offset-3" method="post" action="{{path('login')}}">
+  <div class="mb-3">
+    <label for="email" class="form-label">Email adresse</label>
+    <input type="email" class="form-control" value="{{ last_user }}" name="_username" id="email" aria-describedby="emailHelp" placeholder="Entrez votre email">
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label">Password</label>
+    <input type="password" name="_password" class="form-control" id="password">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
 {% endblock %}

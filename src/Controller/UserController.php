@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 #[Route('/user')]
 class UserController extends AbstractController
@@ -33,7 +34,8 @@ class UserController extends AbstractController
             // $passEncode = $encoder->encodePassword($user, $user->getPassword());
             // $user->setPassword($passEncode);
             $user->setPassword($passwordHasher->hashPassword($user, $user->getPassword()));
-
+            // dd($user->getPassword());
+            $user->setRoles('ROLE_USER');
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
@@ -48,8 +50,16 @@ class UserController extends AbstractController
     }
 
     #[Route('/login', name: 'login')]
-    public function login(){
-        return $this->render('user/login.html.twig');
+    public function login(AuthenticationUtils $auth){
+        $error =$auth->getLastAuthenticationError();
+        $lastUserName= $auth->getLastUsername();
+        return $this->render('user/login.html.twig',[
+            "last_user"=>$lastUserName,
+            "error"=>$error
+        ]);
+    }
+    #[Route('/logout', name: 'logout')]
+    public function logout(){
     }
 
     #[Route('/{id}', name: 'user_show', methods: ['GET'])]

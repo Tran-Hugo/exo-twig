@@ -125,8 +125,10 @@ class AutoController extends AbstractController
         
         return $this->render('auto/add.html.twig');
     }
+    
     #[Route('/add', name: 'add_auto')]
     public function addForm(Request $request,EntityManagerInterface $em,AutoService $autoService){
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $categories = $em->getRepository(Category::class);
         $allCategories=$categories->findAll();
         // dd($categories);

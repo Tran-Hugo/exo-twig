@@ -23,22 +23,44 @@
           <a class="nav-link active" aria-current="page" href="{{path('product')}}">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{path('about')}}">à propos</a>
+          <a class="nav-link" href="{{path('about')}}">About</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{{path('form_contact')}}">Contact</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
+            Catégories
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
           {% for cat in app.session.get('category') %}
             <li><a class="dropdown-item" href="{{ path('category_item',{'id': cat.id}) }}">{{cat.name}}</a></li>
           {% endfor %}
           </ul>
+          
         </li>
-        
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Administration
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            {% if not app.user %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ path('login') }}">Connexion</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ path('login') }}">Connexion</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ path('user_new') }}">Inscription</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ path('logout') }}">Déconnexion</a>
+            </li>
+            {% endif %}
+          </ul>
+        </li>
       </ul>
       <form class="d-flex">
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
