@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 30, 2021 at 10:22 PM
+-- Generation Time: Aug 31, 2021 at 05:52 PM
 -- Server version: 5.7.24
 -- PHP Version: 7.4.1
 
@@ -189,7 +189,8 @@ INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_
 ('DoctrineMigrations\\Version20210819125137', '2021-08-19 19:44:03', 58),
 ('DoctrineMigrations\\Version20210820075858', '2021-08-20 08:00:39', 176),
 ('DoctrineMigrations\\Version20210827184543', '2021-08-27 18:53:17', 210),
-('DoctrineMigrations\\Version20210830125705', '2021-08-30 12:57:54', 229);
+('DoctrineMigrations\\Version20210830125705', '2021-08-30 12:57:54', 229),
+('DoctrineMigrations\\Version20210831134742', '2021-08-31 13:47:55', 226);
 
 -- --------------------------------------------------------
 
@@ -325,15 +326,17 @@ CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `username` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `roles` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `email`, `password`) VALUES
-(2, 'fskjf', 'htran77@hotmail.fr', '$2y$13$mgOBFoHP/XjKLIRvFFkww.ngHBtg.bBQjGXcMnMxq2.m/lPYh3CjK');
+INSERT INTO `user` (`id`, `username`, `email`, `password`, `roles`) VALUES
+(5, 'admin', 'admin@gmail.com', '$2y$13$Lm/Dd6HEhV0P2oqUFOkiCO9mQOGTN9ZrXpXujHXs/cydJ4EvcdOQy', 'ROLE_ADMIN'),
+(6, 'user', 'user@gmail.com', '$2y$13$.uVu6637fGsKG1URYE3LqOJKPfa1K.93w7HHEAa2W8pw4DFv.nuvS', 'ROLE_USER');
 
 --
 -- Indexes for dumped tables
@@ -396,7 +399,7 @@ ALTER TABLE `stagiaire`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
