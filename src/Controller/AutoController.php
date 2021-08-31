@@ -12,6 +12,7 @@ use Symfony\Component\Mime\Email;
 use App\Repository\AutoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -127,8 +128,9 @@ class AutoController extends AbstractController
     }
     
     #[Route('/add', name: 'add_auto')]
+    #[IsGranted('ROLE_ADMIN')]
     public function addForm(Request $request,EntityManagerInterface $em,AutoService $autoService){
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        // $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $categories = $em->getRepository(Category::class);
         $allCategories=$categories->findAll();
         // dd($categories);
